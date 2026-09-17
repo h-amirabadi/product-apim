@@ -13,17 +13,40 @@ create_admin_account = true
 [user_store]
 type = "database_unique_id"
 
+
 [database.apim_db]
-type = "h2"
-url = "jdbc:h2:./repository/database/WSO2AM_DB;DB_CLOSE_ON_EXIT=FALSE"
-username = "wso2carbon"
-password = "wso2carbon"
+type = "oracle"
+url = "jdbc:oracle:thin:@localhost:1521/XEPDB1"
+username = "wso2am_db"
+password = "wso2am_db"
+driver = "oracle.jdbc.driver.OracleDriver"
+validationQuery = "SELECT 1 FROM DUAL"
+pool_options.maxActive = 80
+pool_options.maxWait = 60000
+pool_options.minIdle = 5
 
 [database.shared_db]
-type = "h2"
-url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE"
-username = "wso2carbon"
-password = "wso2carbon"
+type = "oracle"
+url = "jdbc:oracle:thin:@localhost:1521/XEPDB1"
+username = "wso2shared_db"
+password = "wso2shared_db"
+driver = "oracle.jdbc.driver.OracleDriver"
+validationQuery = "SELECT 1 FROM DUAL"
+pool_options.maxActive = 80
+pool_options.maxWait = 60000
+pool_options.minIdle = 5
+
+#[database.apim_db]
+#type = "h2"
+#url = "jdbc:h2:./repository/database/WSO2AM_DB;DB_CLOSE_ON_EXIT=FALSE"
+#username = "wso2carbon"
+#password = "wso2carbon"
+#
+#[database.shared_db]
+#type = "h2"
+#url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE"
+#username = "wso2carbon"
+#password = "wso2carbon"
 
 [keystore.tls]
 file_name =  "wso2carbon.jks"
@@ -110,7 +133,7 @@ enable = false
 type = "moesif"
 
 [apim.ai]
-enable = true
+enable = false
 key = ""
 
 [apim.key_manager]
