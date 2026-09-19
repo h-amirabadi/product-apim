@@ -17,8 +17,8 @@ type = "database_unique_id"
 [database.apim_db]
 type = "oracle"
 url = "jdbc:oracle:thin:@localhost:1521/XEPDB1"
-username = "wso2am_db"
-password = "wso2am_db"
+username = "apim_db"
+password = "apim_db"
 driver = "oracle.jdbc.driver.OracleDriver"
 validationQuery = "SELECT 1 FROM DUAL"
 pool_options.maxActive = 80
@@ -28,8 +28,8 @@ pool_options.minIdle = 5
 [database.shared_db]
 type = "oracle"
 url = "jdbc:oracle:thin:@localhost:1521/XEPDB1"
-username = "wso2shared_db"
-password = "wso2shared_db"
+username = "shared_db"
+password = "shared_db"
 driver = "oracle.jdbc.driver.OracleDriver"
 validationQuery = "SELECT 1 FROM DUAL"
 pool_options.maxActive = 80

@@ -1,0 +1,13 @@
+services:
+  apim-oracle:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    container_name: apim-oracle
+    ports: ["1521:1521", "5501:5500"]
+    environment:
+      ORACLE_PWD: Oracle123
+      ORACLE_CHARACTERSET: AL32UTF8
+    volumes:
+      - apim-oracle-data:/opt/oracle/oradata
+      - apim-oracle-data:/opt/oracle/scripts/setup
+volumes:
+  apim-oracle-data:
