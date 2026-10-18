@@ -129,8 +129,8 @@ issuer = "org.wso2.is.key.manager.tokenpersistence.issuer.ExtendedJWTTokenIssuer
 #expiry_time = "2m"
 
 [apim.analytics]
-enable = false
-type = "moesif"
+enable = true
+type = "elk"
 
 [apim.ai]
 enable = false
