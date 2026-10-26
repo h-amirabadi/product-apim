@@ -495,9 +495,9 @@
             <% } else { %>
                 <%=AuthenticationEndpointUtil.i18n(resourceBundle, "privacy.policy.cookies.short.description")%>
             <% } %>
-            <a href="cookie_policy.do" target="policy-pane">
+<%--            <a href="cookie_policy.do" target="policy-pane">--%>
                 <%=AuthenticationEndpointUtil.i18n(resourceBundle, "privacy.policy.cookies")%>
-            </a>
+<%--            </a>--%>
             <%=AuthenticationEndpointUtil.i18n(resourceBundle, "privacy.policy.for.more.details")%>
         </div>
     <% } %>
@@ -515,9 +515,9 @@
             <% } else { %>
                 <%=AuthenticationEndpointUtil.i18n(resourceBundle, "privacy.policy.privacy.short.description")%>
             <% } %>
-            <a href="privacy_policy.do" target="policy-pane">
+<%--            <a href="privacy_policy.do" target="policy-pane">--%>
                 <%=AuthenticationEndpointUtil.i18n(resourceBundle, "privacy.policy.general")%>
-            </a>
+<%--            </a>--%>
         </div>
     <% } %>
     <div class="ui divider hidden"></div>

@@ -164,10 +164,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="icon" href="libs/themes/default/assets/images/favicon.ico" type="image/x-icon"/>
+<link rel="icon" href="includes/favicon.png" type="image/png"/>
 <link href="libs/themes/default/theme.70534561.min.css" rel="stylesheet">
 
-<title><%=request.getAttribute("pageTitle")%></title>
+<%--<title><%=request.getAttribute("pageTitle")%></title>--%>
 
 <%
   String cssPath = request.getAttribute("customCSS") + "";
@@ -178,3 +178,104 @@
 %>
 
 <script src="libs/jquery_3.6.0/jquery-3.6.0.min.js"></script>
+
+<script>
+    /* Synchronize portal language with login page language */
+    (function() {
+        try {
+            var storedLang = localStorage.getItem('language');
+            var urlParams = new URLSearchParams(window.location.search);
+            var queryLang = urlParams.get('ui_locales') || urlParams.get('locale');
+            if (queryLang) {
+                var normalized = (queryLang.indexOf('fa') !== -1) ? 'fa' : 'en';
+                document.cookie = "app_lang=" + normalized + ";path=/;max-age=31536000;SameSite=Lax";
+                try { localStorage.setItem('language', normalized); } catch(e) {}
+            } else if (storedLang && (storedLang === 'fa' || storedLang === 'en')) {
+                var matchCookie = document.cookie.match(/(^|;)\s*app_lang\s*=\s*([^;]+)/);
+                var cookieVal = matchCookie ? matchCookie[2] : null;
+                if (cookieVal !== storedLang) {
+                    document.cookie = "app_lang=" + storedLang + ";path=/;max-age=31536000;SameSite=Lax";
+                    urlParams.set('ui_locales', storedLang);
+                    window.location.search = urlParams.toString();
+                }
+            }
+        } catch(e) {}
+    })();
+</script>
+
+<style>
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('fonts/Vazirmatn/Vazirmatn-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('fonts/Vazirmatn/Vazirmatn-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url('fonts/Vazirmatn/Vazirmatn-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+<% if (Boolean.TRUE.equals(request.getAttribute("isRTL"))) { %>
+body.rtl, [dir="rtl"], html[dir="rtl"] {
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  direction: rtl;
+  text-align: right;
+}
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] h4, [dir="rtl"] h5, [dir="rtl"] p,
+[dir="rtl"] span, [dir="rtl"] label, [dir="rtl"] a, [dir="rtl"] input, [dir="rtl"] button {
+  font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+[dir="rtl"] .ui.header {
+  text-align: right;
+}
+[dir="rtl"] .ui.left.icon.input > input {
+  padding-left: 1em !important;
+  padding-right: 2.8em !important;
+  text-align: right;
+}
+[dir="rtl"] .ui.left.icon.input > i.icon:not(#passwordUnmaskIcon) {
+  right: 0 !important;
+  left: auto !important;
+}
+[dir="rtl"] .ui.fluid.left.icon.input.addon-wrapper > input[type="password"],
+[dir="rtl"] .ui.fluid.left.icon.input.addon-wrapper > input[type="text"] {
+  padding-right: 2.8em !important;
+  padding-left: 2.8em !important;
+}
+[dir="rtl"] #passwordUnmaskIcon {
+  left: 0.8em !important;
+  right: auto !important;
+}
+[dir="rtl"] .ui.checkbox label {
+  padding-right: 1.85em !important;
+  padding-left: 0 !important;
+  text-align: right !important;
+}
+[dir="rtl"] .ui.checkbox label:before,
+[dir="rtl"] .ui.checkbox label:after {
+  right: 0 !important;
+  left: auto !important;
+}
+[dir="rtl"] .ui.message {
+  text-align: right;
+}
+[dir="rtl"] .buttons .field {
+  text-align: right;
+}
+[dir="rtl"] .product-title {
+  text-align: center;
+}
+<% } %>
+</style>
+

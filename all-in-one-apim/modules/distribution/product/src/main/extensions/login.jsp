@@ -39,7 +39,64 @@
 <%@ page import="java.util.Map" %>
 <%@ taglib prefix="layout" uri="org.wso2.identity.apps.taglibs.layout.controller" %>
 
-<%@ include file="includes/localize.jsp" %>
+<%@ page import="java.util.ResourceBundle" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="javax.servlet.http.Cookie" %>
+<%@ page import="org.apache.commons.lang.StringUtils" %>
+<%@ page import="org.wso2.carbon.identity.application.authentication.endpoint.util.AuthenticationEndpointUtil" %>
+<%@ page import="org.wso2.carbon.identity.application.authentication.endpoint.util.EncodedControl" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
+<%
+    String BUNDLE = "org.wso2.carbon.identity.application.authentication.endpoint.i18n.Resources";
+
+    String selectedLang = request.getParameter("ui_locales");
+    if (StringUtils.isBlank(selectedLang)) {
+        selectedLang = request.getParameter("locale");
+    }
+    if (StringUtils.isBlank(selectedLang)) {
+        selectedLang = request.getParameter("lang");
+    }
+
+    if (StringUtils.isBlank(selectedLang) && request.getCookies() != null) {
+        for (Cookie c : request.getCookies()) {
+            if ("app_lang".equals(c.getName()) || "ui_locales".equals(c.getName()) || "language".equals(c.getName())) {
+                selectedLang = c.getValue();
+                break;
+            }
+        }
+    }
+
+    Locale effectiveLocale = null;
+    if (StringUtils.isNotBlank(selectedLang)) {
+        selectedLang = selectedLang.trim().toLowerCase();
+        if (selectedLang.contains("fa") || selectedLang.contains("persian") || selectedLang.contains("farsi")) {
+            effectiveLocale = new Locale("fa");
+        } else if (selectedLang.contains("en")) {
+            effectiveLocale = Locale.ENGLISH;
+        } else {
+            effectiveLocale = new Locale(selectedLang.split("[-_ ]")[0]);
+        }
+    } else if (request.getLocale() != null && "fa".equalsIgnoreCase(request.getLocale().getLanguage())) {
+        effectiveLocale = new Locale("fa");
+    } else {
+        effectiveLocale = request.getLocale() != null ? request.getLocale() : Locale.ENGLISH;
+    }
+
+    boolean isRTL = "fa".equalsIgnoreCase(effectiveLocale.getLanguage());
+    request.setAttribute("isRTL", isRTL);
+    request.setAttribute("langCode", isRTL ? "fa" : "en");
+
+    ResourceBundle resourceBundle = null;
+    try {
+        resourceBundle = ResourceBundle.getBundle(BUNDLE, effectiveLocale, new EncodedControl(StandardCharsets.UTF_8.toString()));
+    } catch (Exception e) {
+        resourceBundle = ResourceBundle.getBundle(BUNDLE, Locale.ENGLISH, new EncodedControl(StandardCharsets.UTF_8.toString()));
+    }
+
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
+%>
 <jsp:directive.include file="includes/init-url.jsp"/>
 <jsp:directive.include file="includes/layout-resolver.jsp"/>
 
@@ -180,7 +237,7 @@
 %>
 
 <!doctype html>
-<html>
+<html lang="<%= request.getAttribute("langCode") != null ? request.getAttribute("langCode") : "en" %>" dir="<%= Boolean.TRUE.equals(request.getAttribute("isRTL")) ? "rtl" : "ltr" %>">
 <head>
     <%-- header --%>
     <%
@@ -200,7 +257,7 @@
         }
     %>
 </head>
-<body class="login-portal layout authentication-portal-layout" onload="checkSessionKey()">
+<body class="login-portal layout authentication-portal-layout <%= Boolean.TRUE.equals(request.getAttribute("isRTL")) ? "rtl" : "" %>" dir="<%= Boolean.TRUE.equals(request.getAttribute("isRTL")) ? "rtl" : "ltr" %>" onload="checkSessionKey()">
 
     <% request.setAttribute("pageName", "sign-in"); %>
     <% if (new File(getServletContext().getRealPath("extensions/timeout.jsp")).exists()) { %>
@@ -223,14 +280,27 @@
         </layout:component>
         <layout:component componentName="MainSection" >
             <div class="ui segment">
-                <h3 class="ui header ellipsis">
-                    <% if (isIdentifierFirstLogin(inputType)) { %>
-                        <div class="display-inline"><%=AuthenticationEndpointUtil.i18n(resourceBundle, "welcome") + " "%></div>
-                        <div id="user-name-label" class="display-inline" data-position="top left" data-variation="inverted" data-content="<%=Encode.forHtmlAttribute(usernameIdentifier)%>"><%=Encode.forHtmlContent(usernameIdentifier)%></div>
-                    <% } else { %>
-                        <%=AuthenticationEndpointUtil.i18n(resourceBundle, "login")%>
-                    <% } %>
-                </h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 class="ui header ellipsis" style="margin: 0;">
+                        <% if (isIdentifierFirstLogin(inputType)) { %>
+                            <div class="display-inline"><%=AuthenticationEndpointUtil.i18n(resourceBundle, "welcome") + " "%></div>
+                            <div id="user-name-label" class="display-inline" data-position="top left" data-variation="inverted" data-content="<%=Encode.forHtmlAttribute(usernameIdentifier)%>"><%=Encode.forHtmlContent(usernameIdentifier)%></div>
+                        <% } else { %>
+                            <%=AuthenticationEndpointUtil.i18n(resourceBundle, "login")%>
+                        <% } %>
+                    </h3>
+                    <div>
+                        <% if (Boolean.TRUE.equals(request.getAttribute("isRTL"))) { %>
+                            <button type="button" class="ui mini basic compact button" onclick="switchLoginLang('en')" title="Switch to English" style="font-family: -apple-system, Roboto, sans-serif !important; border-radius: 4px;">
+                                English
+                            </button>
+                        <% } else { %>
+                            <button type="button" class="ui mini basic compact button" onclick="switchLoginLang('fa')" title="تغییر زبان به فارسی" style="font-family: 'Vazirmatn', Tahoma, sans-serif !important; border-radius: 4px;">
+                                فارسی
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
 
                 <div class="segment-form">
                     <%
@@ -581,6 +651,15 @@
                 hide: 800
             }
         });
+
+        function switchLoginLang(targetLang) {
+            document.cookie = "app_lang=" + targetLang + ";path=/;max-age=31536000;SameSite=Lax";
+            try { localStorage.setItem('language', targetLang); } catch (e) {}
+            var url = new URL(window.location.href);
+            url.searchParams.set("ui_locales", targetLang);
+            url.searchParams.set("locale", targetLang);
+            window.location.href = url.toString();
+        }
     </script>
 
     <%!

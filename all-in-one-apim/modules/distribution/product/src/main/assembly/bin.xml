@@ -587,6 +587,7 @@
                 <include>cookie-policy-content.jsp</include>
                 <include>privacy-policy-content.jsp</include>
                 <include>favicon.png</include>
+                <include>localize.jsp</include>
             </includes>
         </fileSet>
 
@@ -601,6 +602,28 @@
                 <include>basicauth.jsp</include>
                 <include>login.jsp</include>
                 <include>identifierauth.jsp</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                src/main/extensions/i18n
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/authenticationendpoint/WEB-INF/classes/org/wso2/carbon/identity/application/authentication/endpoint/i18n
+            </outputDirectory>
+            <includes>
+                <include>Resources_fa.properties</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                src/main/extensions/fonts
+            </directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/authenticationendpoint/fonts
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
             </includes>
         </fileSet>
 
