@@ -2,7 +2,7 @@ services:
   apim-oracle:
     image: container-registry.oracle.com/database/express:21.3.0-xe
     container_name: apim-oracle
-    ports: ["1521:1521", "5501:5500"]
+    ports: ["1522:1522", "5501:5500"]
     environment:
       ORACLE_PWD: Oracle123
       ORACLE_CHARACTERSET: AL32UTF8

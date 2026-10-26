@@ -16,7 +16,7 @@ type = "database_unique_id"
 
 [database.apim_db]
 type = "oracle"
-url = "jdbc:oracle:thin:@localhost:1521/XEPDB1"
+url = "jdbc:oracle:thin:@localhost:1522/XEPDB1"
 username = "apim_db"
 password = "apim_db"
 driver = "oracle.jdbc.driver.OracleDriver"
@@ -27,7 +27,7 @@ pool_options.minIdle = 5
 
 [database.shared_db]
 type = "oracle"
-url = "jdbc:oracle:thin:@localhost:1521/XEPDB1"
+url = "jdbc:oracle:thin:@localhost:1522/XEPDB1"
 username = "shared_db"
 password = "shared_db"
 driver = "oracle.jdbc.driver.OracleDriver"
